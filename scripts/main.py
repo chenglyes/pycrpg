@@ -3,7 +3,7 @@ import random
 
 if __name__ == "__main__":
     fight = Fight()
-    actions = fight.simulate()
+    fight.simulate()
 
-    for action in actions:
+    for action in fight.get_actions():
         print(action)
