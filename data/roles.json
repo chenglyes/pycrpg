@@ -1,0 +1,13 @@
+[
+    {
+        "id": "r001",
+        "name": "r001",
+        "base_health": 100,
+        "base_attack": 100,
+        "base_defense": 100,
+        "base_speed": 100,
+        "skills": [
+            "r001-s1"
+        ]
+    }
+]

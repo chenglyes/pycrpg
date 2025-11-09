@@ -1,8 +1,8 @@
-from roletempl import RoleTempl
+from skilltempl import SkillTempl
 import json
 
-class RoleTemplMan:
-    _templates: dict[str, RoleTempl] = {}
+class SkillTemplMan:
+    _templates: dict[str, SkillTempl] = {}
 
     @classmethod
     def load(cls, file: str):
@@ -10,7 +10,7 @@ class RoleTemplMan:
             root = json.load(f)
             cls._templates = {}
             for data in root:
-                template = RoleTempl(**data)
+                template = SkillTempl(**data)
                 cls._templates[template.id] = template
     
     @classmethod
@@ -19,6 +19,5 @@ class RoleTemplMan:
             json.dump(cls._templates.values(), f, indent=4)
 
     @classmethod
-    def get(cls, id: str) -> RoleTempl | None:
+    def get(cls, id: str) -> SkillTempl | None:
         return cls._templates.get(id)
-    

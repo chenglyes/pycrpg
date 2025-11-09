@@ -13,17 +13,12 @@ class Fight:
         self.init_teams.append(team)
 
     def simulate(self) -> list[dict]:
-        context = FightContext(self.seed)
+        context = FightContext(self.seed, self.init_teams)
         
-        for i, team in enumerate(self.init_teams):
-            for j, role in enumerate(team):
-                context.all_roles.append(FightRole(role, i, j))
-
         context.log_action("begin_fight", {})
         context.dispatch_event(fightevents.BeginFight())
         
-        while context.check_winner() == 0:
-            self._round += 1
+        while context.check_winner() == 0 and context.round < 30:
             self._on_round(context)
 
         winner = context.check_winner()
@@ -32,6 +27,7 @@ class Fight:
         return context.actions
 
     def _on_round(self, context: FightContext):
+        context.round += 1
         context.log_action("begin_round", {"round": context.round})
         context.dispatch_event(fightevents.BeginRound(context.round))
         
@@ -49,22 +45,8 @@ class Fight:
             "actor": actor.uid,
         })
         context.dispatch_event(fightevents.BeginTurn(actor))
-
-        # attack rand 1 enemy
-        enemys = [r for r in context.all_roles if r.is_alive and r.team != actor.team]
-        if not enemys:
-            return
-        
-        target = context.random.choice(enemys)
-
-        damage = actor.stats.attack
-        context.log_action("attack", {
+        context.dispatch_event(fightevents.OnTurn(actor))
+        context.dispatch_event(fightevents.EndTurn(actor))
+        context.log_action("end_turn", {
             "actor": actor.uid,
-            "targets": [target.uid]
-        })
-
-        target.take_damage(damage)
-        context.log_action("take_damage", {
-            "actor": target.uid,
-            "value": damage
         })

@@ -1,51 +1,48 @@
-from roletempl import RoleTempl
+# from roletempl import RoleTempl
 from roletemplman import RoleTemplMan
 from rolestats import RoleStats
+from skill import Skill
 import uuid
 
 class Role:
-    def __init__(self, tid: int, uid: str = str(uuid.uuid4())):
+    def __init__(self, tid: str, uid: str | None = None):
         template = RoleTemplMan.get(tid)
         if template is None:
             raise Exception(f"Invalid template ID '{tid}'.")
 
-        self._template = template
-        self._uid = uid
-        self._level: int = 1
+        self.template = template
+        self.uid = uid if uid else str(uuid.uuid4())
+        self.level: int = 1
         self.exp: int = 0
-    
-    @property
-    def uid(self) -> str:
-        return self._uid
 
-    @property
-    def template(self) -> RoleTempl:
-        return self._template
+        self.skills: list[Skill] = []
+        for skill_id in template.skills:
+            self.skills.append(Skill(skill_id))
     
     @property
     def stats(self) -> RoleStats:
         return RoleStats(
-            health = self._template.base_health,
-            attack = self._template.base_attack,
-            defense = self._template.base_defense,
-            speed = self._template.base_speed,
+            health = self.template.base_health,
+            attack = self.template.base_attack,
+            defense = self.template.base_defense,
+            speed = self.template.base_speed,
         )
     
     @property
     def max_health(self) -> int:
-        return self._template.base_health + (self._level - 1) * 10
+        return self.template.base_health + (self.level - 1) * 10
 
     @classmethod
     def from_saved(cls, data: dict):
         role = cls(data["tid"], data["uid"])
-        role._level = data["level"]
+        role.level = data["level"]
         role.exp = data["exp"]
         return role
 
     def to_saved(self) -> dict:
         return {
-            "uid": self._uid,
-            "tid": self._template.id,
-            "level": self._level,
+            "uid": self.uid,
+            "tid": self.template.id,
+            "level": self.level,
             "exp": self.exp
         }
