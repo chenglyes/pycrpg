@@ -1,31 +1,41 @@
-from fightskill import FightSkill
-import fightevents as fightevents
+from typing import TYPE_CHECKING
+if TYPE_CHECKING:
+    from scripts.fightskill import FightSkill
+    from scripts.fightcontext import FightContext
+    from scripts.fightrole import FightRole
+    import scripts.fightevents as fightevents
+else:
+    from fightskill import FightSkill
+    from fightcontext import FightContext
+    from fightrole import FightRole
+    import fightevents as fightevents
 
 class Fireball(FightSkill):
     def register_events(self):
-        self.context.event_man.register(fightevents.OnTurn, self.on_turn)
+        self.context.event_man.register(fightevents.OnTurn, lambda e: self.on_turn(e, self.owner, self.context))
 
-    def on_turn(self, event: fightevents.OnTurn):
-        if not self.owner.is_alive:
+    def on_turn(self, event: fightevents.OnTurn, owner: FightRole, context: FightContext):
+        if event.actor != owner:
             return
-        if event.actor == self.owner:
-            enemys = [r for r in self.context.all_roles if r.is_alive and r.team != self.owner.team]
-            if not enemys:
-                return
+        return self.cast(self.owner, context)
 
-            target = self.context.random.choice(enemys)
+    def cast(self, caster: FightRole, context: FightContext):
+        # check pre-condition
+        if not caster.is_alive:
+            return
+        
+        enemys = [r for r in self.context.all_roles if r.is_alive and r.team != caster.team]
+        if not enemys:
+            return
 
-            self.context.log_action("cast_skill", {
-                "actor": self.owner.uid,
-                "skill": self.template.id,
-                "targets": [target.uid]
-            })
+        target = self.context.random.choice(enemys)
 
-            damage = self.owner.stats.attack
+        self.context.log_action("cast_skill", {
+            "actor": caster.uid,
+            "skill": self.template.id,
+            "targets": [target.uid]
+        })
 
-            self.context.log_action("take_damage", {
-                "actor": target.uid,
-                "value": damage
-            })
+        damage = caster.stats.attack
 
-            target.health -= damage
+        self.context.deal_damage(caster, target, self, damage)

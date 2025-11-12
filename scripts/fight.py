@@ -40,6 +40,9 @@ class Fight:
                 if context.check_winner() != 0:
                     break
 
+        context.log_action("end_round", {"round": context.round})
+        context.dispatch_event(fightevents.EndRound(context.round))
+
     def _on_turn(self, actor: FightRole, context: FightContext):
         context.log_action("begin_turn", {
             "actor": actor.uid,

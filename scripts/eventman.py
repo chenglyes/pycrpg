@@ -1,6 +1,7 @@
 class EventMan:
     def __init__(self):
         self._listeners: dict[type, list] = {}
+        self._id = 0
 
     def register(self, event_type: type, callback):
         if event_type not in self._listeners:
