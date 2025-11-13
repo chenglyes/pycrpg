@@ -1,41 +1,35 @@
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from scripts.fightskill import FightSkill
-    from scripts.fightcontext import FightContext
     from scripts.fightrole import FightRole
-    import scripts.fightevents as fightevents
+    from scripts.fightcontext import FightContext
+    #import scripts.fightevents as fightevents
 else:
     from fightskill import FightSkill
-    from fightcontext import FightContext
     from fightrole import FightRole
-    import fightevents as fightevents
+    from fightcontext import FightContext
+    #import fightevents as fightevents
 
 class Fireball(FightSkill):
-    def register_events(self):
-        self.context.event_man.register(fightevents.OnTurn, lambda e: self.on_turn(e, self.owner, self.context))
+    def can_cast(self, actor: FightRole, context: FightContext) -> bool:
+        if not super().can_cast(actor, context):
+            return False
+        self.enemys = [r for r in context.all_roles if r.is_alive and r.team != actor.team]
+        return len(self.enemys) > 0
 
-    def on_turn(self, event: fightevents.OnTurn, owner: FightRole, context: FightContext):
-        if event.actor != owner:
-            return
-        return self.cast(self.owner, context)
+    def do_cast(self, actor: FightRole, context: FightContext):
+        target = context.random.choice(self.enemys)
+        damage = actor.calc_damage(context, 1.0 + 0.1 * (self.skill.level - 1))
+        context.deal_damage(actor, target, self, damage)
 
-    def cast(self, caster: FightRole, context: FightContext):
-        # check pre-condition
-        if not caster.is_alive:
-            return
-        
-        enemys = [r for r in self.context.all_roles if r.is_alive and r.team != caster.team]
-        if not enemys:
-            return
+class BigFireball(FightSkill):
+    def can_cast(self, actor: FightRole, context: FightContext) -> bool:
+        if not super().can_cast(actor, context):
+            return False
+        self.enemys = [r for r in context.all_roles if r.is_alive and r.team != actor.team]
+        return len(self.enemys) > 0
 
-        target = self.context.random.choice(enemys)
-
-        self.context.log_action("cast_skill", {
-            "actor": caster.uid,
-            "skill": self.template.id,
-            "targets": [target.uid]
-        })
-
-        damage = caster.stats.attack
-
-        self.context.deal_damage(caster, target, self, damage)
+    def do_cast(self, actor: FightRole, context: FightContext):
+        for target in self.enemys:
+            damage = actor.calc_damage(context, 1.2 + 0.15 * (self.skill.level - 1))
+            context.deal_damage(actor, target, self, damage)

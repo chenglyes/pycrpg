@@ -1,13 +1,26 @@
 [
     {
         "id": "r001",
-        "name": "r001",
+        "name": "火球圆圆",
         "base_health": 100,
         "base_attack": 100,
         "base_defense": 100,
         "base_speed": 100,
         "skills": [
-            "r001-s1"
+            "s001-2",
+            "s001-1"
+        ]
+    },
+    {
+        "id": "r002",
+        "name": "火焰团团",
+        "base_health": 100,
+        "base_attack": 105,
+        "base_defense": 90,
+        "base_speed": 105,
+        "skills": [
+            "s001-2",
+            "s001-1"
         ]
     }
 ]

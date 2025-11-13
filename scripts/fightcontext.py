@@ -16,10 +16,10 @@ class FightContext:
         self.all_roles: list[FightRole] = []
         for i, team in enumerate(init_teams):
             for j, role in enumerate(team):
-                self.all_roles.append(FightRole(role, i + 1, j + 1, self))
+                self.all_roles.append(FightRole(role, i + 1, j + 1))
         self.all_roles.sort(key=lambda r: r.stats.speed, reverse=True)
         for role in self.all_roles:
-            role.register_events()
+            role.prepare_fight(self)
 
     def dispatch_event(self, event):
         self.log_action("event", {
@@ -34,7 +34,7 @@ class FightContext:
     def check_winner(self) -> int:
         alive_teams = set()
         for role in self.all_roles:
-            if role.is_alive:
+            if role.is_alive():
                 alive_teams.add(role.team)
         if len(alive_teams) == 1:
             return alive_teams.pop()
@@ -48,8 +48,12 @@ class FightContext:
         target.take_damage(damage)
         self.log_action("take_damage", {
             "actor": target.uid,
-            "value": damage
+            "value": damage,
+            "left": target.health
         })
         self.dispatch_event(fightevents.AfterTakeDamage(target, actor, skill, damage))
-        if not target.is_alive:
+        if not target.is_alive():
+            self.log_action("died", {
+                "actor": target.uid
+            })
             self.dispatch_event(fightevents.Died(target, actor))

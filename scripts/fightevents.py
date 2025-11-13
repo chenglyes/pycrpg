@@ -15,10 +15,6 @@ class BeginTurn:
     def __init__(self, actor: FightRole):
         self.actor  = actor
 
-class OnTurn:
-    def __init__(self, actor: FightRole):
-        self.actor  = actor
-
 class EndTurn:
     def __init__(self, actor: FightRole):
         self.actor  = actor

@@ -31,6 +31,12 @@ class Role:
     @property
     def max_health(self) -> int:
         return self.template.base_health + (self.level - 1) * 10
+    
+    def get_skill(self, id: str) -> Skill:
+        for skill in self.skills:
+            if skill.template.id == id:
+                return skill
+        raise IndexError(f"Skill {id} not in this role")
 
     @classmethod
     def from_saved(cls, data: dict):

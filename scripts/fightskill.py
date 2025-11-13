@@ -7,16 +7,32 @@ from skill import Skill
 import importlib.util
 
 class FightSkill:
-    def __init__(self, skill: Skill, owner: FightRole, context: FightContext):
-        self.template = skill.template
-        self.level = skill.level
-        self.owner = owner
-        self.context = context
+    def __init__(self, skill: Skill):
+        self.skill = skill
+        self.cooltime: int = 0
 
-    def register_events(self): pass
+    def prepare_fight(self, actor: FightRole, context: FightContext):
+        pass
 
+    def update_cooltime(self):
+        if self.cooltime > 0:
+            self.cooltime -= 1
+    
+    def can_cast(self, actor: FightRole, context: FightContext) -> bool:
+        # TODO check cooltime
+        return self.cooltime == 0
+    
+    def do_cast(self, actor: FightRole, context: FightContext):
+        pass
+    
+    def cast(self, actor: FightRole, context: FightContext):
+        self.do_cast(actor, context)
+        self.cooltime = self.skill.template.cooldown
+
+
+class FightSkillMan:
     @classmethod
-    def create(cls, skill: Skill, owner: FightRole, context: FightContext):
+    def load(cls, skill: Skill) -> FightSkill:
         module_name, class_name = skill.template.entry.rsplit('.', 1)
         module_path = module_name.replace(".", "/") + ".py"
         spec = importlib.util.spec_from_file_location(module_name, module_path)
@@ -24,8 +40,8 @@ class FightSkill:
             raise Exception(f"Failed to load skill module '{skill.template.entry}'")
         module = importlib.util.module_from_spec(spec)
         spec.loader.exec_module(module)
-
-        #module = importlib.import_module(module_name)
         skill_class = getattr(module, class_name)
-        return skill_class(skill, owner, context)
+        if not issubclass(skill_class, FightSkill):
+            raise TypeError(f"Class '{class_name}' is not a subclass of FightSkill")
+        return skill_class(skill)
     

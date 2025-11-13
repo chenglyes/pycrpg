@@ -3,36 +3,42 @@ from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from fightcontext import FightContext
 from role import Role
-from fightskill import FightSkill
+from fightskill import FightSkill, FightSkillMan
 
 class FightRole:
-    def __init__(self, role: Role, team: int, field: int, context: FightContext):
+    def __init__(self, role: Role, team: int, field: int):
         self.uid = role.uid
         self.template = role.template
         self.stats = role.stats
         self.team = team
         self.field = field
-        self.context = context
         self.health = role.max_health
         self.buffs = []
         self.skills: list[FightSkill] = []
         for skill in role.skills:
-            self.skills.append(FightSkill.create(skill, self, context))
+            self.skills.append(FightSkillMan.load(skill))
 
-    @property
     def is_alive(self) -> bool:
         return self.health > 0
     
-    def register_events(self):
+    def can_act(self) -> bool:
+        # TODO check state
+        return self.is_alive()
+    
+    def prepare_fight(self, context: FightContext):
         for skill in self.skills:
-            skill.register_events()
+            skill.prepare_fight(self, context)
+
+    def calc_damage(self, context: FightContext, k: float) -> int:
+        # TODO sum attack
+        damage = round(self.stats.attack * k)
+        # TODO check critical
+        if context.random.random() < 0.1:
+            damage = round(damage * 1.5)
+        return damage
 
     def take_damage(self, value: int):
         if value < 0:
             raise ValueError("Damage value must be non-negative.")
+        # TODO cacl defense
         self.health -= value
-
-    def take_heal(self, value: int):
-        if value < 0:
-            raise ValueError("Heal value must be non-negative.")
-        self.health += value
