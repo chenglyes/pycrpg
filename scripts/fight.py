@@ -39,7 +39,7 @@ class Fight:
         context.dispatch_event(fightevents.BeginRound(context.round))
         
         active_roles = [r for r in context.all_roles if r.is_alive()]
-        active_roles.sort(key=lambda x: x.stats.speed, reverse=True)
+        active_roles.sort(key=lambda x: x.stats.get("speed"), reverse=True)
 
         for role in active_roles:
             if role.is_alive():

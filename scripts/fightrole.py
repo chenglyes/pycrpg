@@ -9,10 +9,11 @@ class FightRole:
     def __init__(self, role: Role, team: int, field: int):
         self.uid = role.uid
         self.template = role.template
-        self.stats = role.stats
         self.team = team
         self.field = field
-        self.health = role.max_health
+        self.base_stats = role.get_stats()
+        self.stats = self.base_stats.copy()
+        self.health = self.stats.get("health")
         self.buffs = []
         self.skills: list[FightSkill] = []
         for skill in role.skills:
@@ -31,7 +32,7 @@ class FightRole:
 
     def calc_damage(self, context: FightContext, k: float) -> int:
         # TODO sum attack
-        damage = round(self.stats.attack * k)
+        damage = round(self.stats.get("attack") * k)
         # TODO check critical
         if context.random.random() < 0.1:
             damage = round(damage * 1.5)
@@ -41,7 +42,7 @@ class FightRole:
         if value < 0:
             raise ValueError("Damage value must be non-negative.")
         # TODO cacl defense
-        reduce = 200 / (200 + self.stats.defense)
+        reduce = 200 / (200 + self.stats.get("defense"))
         damage = max(1, round(value * reduce))
         self.health -= damage
         return damage

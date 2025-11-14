@@ -1,6 +1,6 @@
 # from roletempl import RoleTempl
 from roletemplman import RoleTemplMan
-from rolestats import RoleStats
+from stats import Stats
 from skill import Skill
 import uuid
 
@@ -20,17 +20,17 @@ class Role:
             self.skills.append(Skill(skill_id))
     
     @property
-    def stats(self) -> RoleStats:
-        return RoleStats(
-            health = self.template.base_health,
-            attack = self.template.base_attack,
-            defense = self.template.base_defense,
-            speed = self.template.base_speed,
-        )
-    
-    @property
     def max_health(self) -> int:
         return self.template.base_health + (self.level - 1) * 10
+    
+    def get_stats(self) -> Stats:
+        stats = Stats()
+        # TODO sum stats
+        stats.add("health", self.template.base_health)
+        stats.add("attack", self.template.base_attack)
+        stats.add("defense", self.template.base_defense)
+        stats.add("speed", self.template.base_speed)
+        return stats
     
     def get_skill(self, id: str) -> Skill:
         for skill in self.skills:
