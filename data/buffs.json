@@ -1,0 +1,9 @@
+[
+    {
+        "id": "b0001",
+        "name": "燃烧",
+        "desc": "持续减少生命值。",
+        "stacks": 1,
+        "entry": "data.buffs.buffs.Burn"
+    }
+]

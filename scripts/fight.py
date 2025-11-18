@@ -51,13 +51,14 @@ class Fight:
         context.dispatch_event(fightevents.EndRound(context.round))
 
     def _on_turn(self, actor: FightRole, context: FightContext):
+        actor.update_cooltimes()
         context.log_action("begin_turn", {
             "actor": actor.uid,
         })
         context.dispatch_event(fightevents.BeginTurn(actor))
         actor.on_begin_turn()
         if actor.can_act():
-            skill = actor.select_cast_skill(context)
+            skill = actor.select_cast_skill()
             if skill is not None:
                 context.log_action("cast_skill", {
                     "actor": actor.uid,

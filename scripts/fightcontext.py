@@ -16,10 +16,10 @@ class FightContext:
         self.all_roles: list[FightRole] = []
         for i, team in enumerate(init_teams):
             for j, role in enumerate(team):
-                self.all_roles.append(FightRole(role, i + 1, j + 1))
+                self.all_roles.append(FightRole(role, i + 1, j + 1, self))
         self.all_roles.sort(key=lambda r: r.stats.get("speed"), reverse=True)
         for role in self.all_roles:
-            role.prepare_fight(self)
+            role.prepare_fight()
 
     def dispatch_event(self, event):
         self.log_action("event", {

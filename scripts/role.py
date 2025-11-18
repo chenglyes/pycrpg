@@ -9,12 +9,10 @@ class Role:
         template = RoleTemplMan.get(tid)
         if template is None:
             raise Exception(f"Invalid template ID '{tid}'.")
-
         self.template = template
         self.uid = uid if uid else str(uuid.uuid4())
         self.level: int = 1
         self.exp: int = 0
-
         self.skills: list[Skill] = []
         for skill_id in template.skills:
             self.skills.append(Skill(skill_id))

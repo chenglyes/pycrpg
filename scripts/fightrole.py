@@ -2,20 +2,22 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 from role import Role
 from fightskill import FightSkill, FightSkillMan
+from buff import Buff
 if TYPE_CHECKING:
     from fightcontext import FightContext
 
 class FightRole:
-    def __init__(self, role: Role, team: int, field: int):
+    def __init__(self, role: Role, team: int, field: int, context: FightContext):
         self.uid = role.uid
         self.template = role.template
         self.team = team
         self.field = field
+        self.context = context
         self.base_stats = role.get_stats()
         self.stats = self.base_stats.copy()
         self.health = self.stats.get("health")
         self.states: dict[str, int] = {}
-        self.buffs = []
+        self.buffs: list[Buff] = []
         self.skills: list[FightSkill] = []
         for skill in role.skills:
             self.skills.append(FightSkillMan.load(skill))
@@ -38,6 +40,38 @@ class FightRole:
     def has_state(self, state: str) -> bool:
         return state in self.states
     
+    def add_buff(self, buff: Buff):
+        self.context.log_action("add_buff", {
+            "actor": self.uid,
+            "buff_id": buff.template.id,
+            "stack": buff.stack,
+            "duration": buff.duration
+        })
+        stacked = False
+        for b in self.buffs:
+            if b.try_stack(buff):
+                stacked = True
+                break
+        if not stacked:
+            self.buffs.append(buff)
+        buff.on_add(self, self.context)
+
+    def remove_buff(self, buff: Buff):
+        self.context.log_action("remove_buff", {
+            "actor": self.uid,
+            "buff_id": buff.template.id
+        })
+        for i, b in enumerate(self.buffs):
+            if b == buff:
+                self.buffs.pop(i)
+                break
+            
+    def get_buff(self, id: str) -> Buff | None:
+        for b in self.buffs:
+            if b.template.id == id:
+                return b
+        return None
+    
     def can_act(self) -> bool:
         if not self.is_alive():
             return False
@@ -46,13 +80,13 @@ class FightRole:
                 return False
         return True
     
-    def prepare_fight(self, context: FightContext):
+    def prepare_fight(self):
         for skill in self.skills:
-            skill.prepare_fight(self, context)
+            skill.prepare_fight(self, self.context)
 
-    def calc_damage(self, context: FightContext, k: float) -> int:
+    def calc_damage(self, k: float) -> int:
         damage = round(self.stats.get("attack") * k)
-        if context.random.random() < (self.stats.get("critical_changce") / 100):
+        if self.context.random.random() < (self.stats.get("critical_changce") / 100):
             damage = round(damage * (1.0 + self.stats.get("critical_damage") / 100))
         return damage
 
@@ -64,20 +98,20 @@ class FightRole:
         self.health -= damage
         return damage
     
-    def select_cast_skill(self, context: FightContext) -> FightSkill | None:
+    def select_cast_skill(self) -> FightSkill | None:
         for skill in self.skills:
-            if skill.can_cast(self, context):
+            if skill.can_cast(self, self.context):
                 return skill
         return None
-
-    def on_begin_turn(self):
+    
+    def update_cooltimes(self):
         for skill in self.skills:
             skill.update_cooltime()
+
+    def on_begin_turn(self):
         for buff in self.buffs:
-            # TODO buff.on_begin_turn()
-            pass
+            buff.on_begin_turn(self, self.context)
 
     def on_end_turn(self):
         for buff in self.buffs:
-            # TODO buff.on_end_turn()
-            pass
+            buff.on_end_turn(self, self.context)

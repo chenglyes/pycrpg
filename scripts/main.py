@@ -1,5 +1,6 @@
 from roletemplman import RoleTemplMan
 from skilltemplman import SkillTemplMan
+from bufftemplman import BuffTemplMan
 from role import Role
 from fight import Fight
 
@@ -36,6 +37,7 @@ def print_fight(actions: list[dict]):
 if __name__ == "__main__":
     RoleTemplMan.load("data/roles.json")
     SkillTemplMan.load("data/skills.json")
+    BuffTemplMan.load("data/buffs.json")
 
     team1: list[Role] = []
     team1.append(Role("r001"))

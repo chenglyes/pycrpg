@@ -1,10 +1,9 @@
 from dataclasses import dataclass
 
 @dataclass
-class SkillTempl:
+class BuffTempl:
     id: str
     name: str
     desc: str
-    cost: int
-    cooldown: int
+    stacks: int
     entry: str

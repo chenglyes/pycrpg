@@ -19,7 +19,7 @@ class Fireball(FightSkill):
 
     def do_cast(self, actor: FightRole, context: FightContext):
         target = context.random.choice(self.enemys)
-        damage = actor.calc_damage(context, 1.0 + 0.1 * (self.skill.level - 1))
+        damage = actor.calc_damage(1.0 + 0.1 * (self.skill.level - 1))
         context.deal_damage(actor, target, self, damage)
 
 class BigFireball(FightSkill):
@@ -31,5 +31,5 @@ class BigFireball(FightSkill):
 
     def do_cast(self, actor: FightRole, context: FightContext):
         for target in self.enemys:
-            damage = actor.calc_damage(context, 1.2 + 0.15 * (self.skill.level - 1))
+            damage = actor.calc_damage(1.2 + 0.15 * (self.skill.level - 1))
             context.deal_damage(actor, target, self, damage)
