@@ -5,7 +5,7 @@
         "desc": "射出寒冰之箭攻击敌方目标，造成 100% 攻击力伤害。",
         "cost": 0,
         "cooldown": 0,
-        "entry": "data.skills.r001.Fireball"
+        "entry": "data.skills.skills.Fireball"
     },
     {
         "id": "s002-1",
@@ -13,7 +13,7 @@
         "desc": "扔出一团火球攻击敌方随机目标，造成 100% 攻击力伤害。",
         "cost": 0,
         "cooldown": 0,
-        "entry": "data.skills.r001.Fireball"
+        "entry": "data.skills.skills.Fireball"
     },
     {
         "id": "s002-2",
@@ -21,6 +21,6 @@
         "desc": "扔出超大火球攻击敌方所有目标，造成 120% 攻击力伤害。",
         "cost": 3,
         "cooldown": 0,
-        "entry": "data.skills.r001.BigFireball"
+        "entry": "data.skills.skills.BigFireball"
     }
 ]
