@@ -2,6 +2,7 @@ from eventman import EventMan
 from role import Role
 from fightrole import FightRole
 from fightskill import FightSkill
+from buff import Buff
 import fightevents
 from random import Random
 
@@ -43,15 +44,15 @@ class FightContext:
         else:
             return 0
         
-    def deal_damage(self, actor: FightRole, target: FightRole, skill: FightSkill, damage: int):
-        self.dispatch_event(fightevents.BeforeTakeDamage(target, actor, skill, damage))
+    def deal_damage(self, actor: FightRole, target: FightRole, source: FightSkill | Buff, damage: int):
+        self.dispatch_event(fightevents.BeforeTakeDamage(target, actor, source, damage))
         real_damage = target.take_damage(damage)
         self.log_action("take_damage", {
             "actor": target.uid,
             "value": real_damage,
             "left": target.health
         })
-        self.dispatch_event(fightevents.AfterTakeDamage(target, actor, skill, real_damage))
+        self.dispatch_event(fightevents.AfterTakeDamage(target, actor, source, real_damage))
         if not target.is_alive():
             self.log_action("died", {
                 "actor": target.uid

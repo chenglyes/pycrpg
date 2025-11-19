@@ -7,8 +7,9 @@ from bufftemplman import BuffTempl, BuffTemplMan
 import importlib.util
 
 class Buff:
-    def __init__(self, template: BuffTempl, stack: int = 1, duration: int = 1):
+    def __init__(self, template: BuffTempl, caster: FightRole, stack: int = 1, duration: int = 1):
         self.template = template
+        self.caster = caster
         self.stack = stack
         self.duration = duration
         self.time = duration
@@ -30,13 +31,11 @@ class Buff:
         pass
 
     def on_end_turn(self, actor: FightRole, context: FightContext):
-        self.time -= 1
-        if self.time <= 0:
-            actor.remove_buff(self)
+        pass
 
 class BuffMan:
     @classmethod
-    def create(cls, tid: str, stack: int = 1, duration: int = 1) -> Buff:
+    def create(cls, tid: str, caster: FightRole, stack: int = 1, duration: int = 1) -> Buff:
         template = BuffTemplMan.get(tid)
         if template is None:
             raise Exception(f"Invalid buff template ID '{tid}'.")
@@ -50,5 +49,5 @@ class BuffMan:
         buff_class = getattr(module, class_name)
         if not issubclass(buff_class, Buff):
             raise TypeError(f"Class '{class_name}' is not a subclass of Buff")
-        return buff_class(template, stack, duration)
+        return buff_class(template, caster, stack, duration)
     

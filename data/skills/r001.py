@@ -1,11 +1,13 @@
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from scripts.fightskill import FightSkill
+    from scripts.buff import BuffMan
     from scripts.fightrole import FightRole
     from scripts.fightcontext import FightContext
     #import scripts.fightevents as fightevents
 else:
     from fightskill import FightSkill
+    from buff import BuffMan
     from fightrole import FightRole
     from fightcontext import FightContext
     #import fightevents as fightevents
@@ -33,3 +35,7 @@ class BigFireball(FightSkill):
         for target in self.enemys:
             damage = actor.calc_damage(1.2 + 0.15 * (self.skill.level - 1))
             context.deal_damage(actor, target, self, damage)
+            if context.random.random() < 0.20:
+                buff = BuffMan.create("b0001", actor)
+                target.add_buff(buff)
+                

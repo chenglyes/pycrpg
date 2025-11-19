@@ -1,7 +1,7 @@
 [
     {
         "id": "r001",
-        "name": "火球圆圆",
+        "name": "冰雪莲莲",
         "base_health": 100,
         "base_attack": 100,
         "base_defense": 100,
@@ -18,7 +18,8 @@
         "base_defense": 90,
         "base_speed": 105,
         "skills": [
-            "s001-2"
+            "s002-2",
+            "s002-1"
         ]
     }
 ]

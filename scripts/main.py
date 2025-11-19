@@ -4,7 +4,7 @@ from bufftemplman import BuffTemplMan
 from role import Role
 from fight import Fight
 
-def print_fight(actions: list[dict]):
+def print_fight(fight: Fight, actions: list[dict]):
     for action in actions:
         match action["type"]:
             case "begin_fight":
@@ -33,6 +33,19 @@ def print_fight(actions: list[dict]):
             case "died":
                 actor = fight.get_role(action["actor"])
                 print(f"{actor.template.name} 死了！")
+            case "add_buff":
+                actor = fight.get_role(action["actor"])
+                caster = fight.get_role(action["caster"])
+                buff_tmpl = BuffTemplMan.get(action["buff"])
+                assert(buff_tmpl is not None)
+                stack = action["stack"]
+                duration = action["duration"]
+                print(f"{actor.template.name} 获得了BUFF {buff_tmpl.name}({duration}回合)，施加者：{caster.template.name}")
+            case "remove_buff":
+                actor = fight.get_role(action["actor"])
+                buff_tmpl = BuffTemplMan.get(action["buff"])
+                assert(buff_tmpl is not None)
+                print(f"{actor.template.name} 失去了BUFF {buff_tmpl.name}")
 
 if __name__ == "__main__":
     RoleTemplMan.load("data/roles.json")
@@ -50,5 +63,7 @@ if __name__ == "__main__":
     fight.add_team(team1)
     fight.add_team(team2)
 
+    print(f"seed={fight.seed}")
+
     actions = fight.simulate()
-    print_fight(actions)
+    print_fight(fight, actions)

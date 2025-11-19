@@ -43,7 +43,8 @@ class FightRole:
     def add_buff(self, buff: Buff):
         self.context.log_action("add_buff", {
             "actor": self.uid,
-            "buff_id": buff.template.id,
+            "caster": buff.caster.uid,
+            "buff": buff.template.id,
             "stack": buff.stack,
             "duration": buff.duration
         })
@@ -59,7 +60,7 @@ class FightRole:
     def remove_buff(self, buff: Buff):
         self.context.log_action("remove_buff", {
             "actor": self.uid,
-            "buff_id": buff.template.id
+            "buff": buff.template.id
         })
         for i, b in enumerate(self.buffs):
             if b == buff:
@@ -107,6 +108,13 @@ class FightRole:
     def update_cooltimes(self):
         for skill in self.skills:
             skill.update_cooltime()
+
+    def update_buffs(self):
+        for buff in self.buffs:
+            buff.time -= 1
+        need_removes = [b for b in self.buffs if b.time <= 0]
+        for buff in need_removes:
+            self.remove_buff(buff)
 
     def on_begin_turn(self):
         for buff in self.buffs:

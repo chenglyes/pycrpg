@@ -66,6 +66,7 @@ class Fight:
                 })
                 skill.cast(actor, context)
         actor.on_end_turn()
+        actor.update_buffs()
         context.dispatch_event(fightevents.EndTurn(actor))
         context.log_action("end_turn", {
             "actor": actor.uid,

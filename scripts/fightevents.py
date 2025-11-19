@@ -1,5 +1,6 @@
 from fightrole import FightRole
 from fightskill import FightSkill
+from buff import Buff
 
 class BeginFight: pass
 
@@ -20,17 +21,17 @@ class EndTurn:
         self.actor  = actor
 
 class BeforeTakeDamage:
-    def __init__(self, actor: FightRole, caster: FightRole, skill: FightSkill, damage: int):
+    def __init__(self, actor: FightRole, caster: FightRole, source: FightSkill | Buff, damage: int):
         self.actor = actor
         self.caster = caster
-        self.skill = skill
+        self.source = source
         self.damage = damage
 
 class AfterTakeDamage:
-    def __init__(self, actor: FightRole, caster: FightRole, skill: FightSkill, damage: int):
+    def __init__(self, actor: FightRole, caster: FightRole, source: FightSkill | Buff, damage: int):
         self.actor = actor
         self.caster = caster
-        self.skill = skill
+        self.source = source
         self.damage = damage
 
 class Died:
