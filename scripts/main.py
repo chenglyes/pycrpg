@@ -55,8 +55,8 @@ if __name__ == "__main__":
 
     team1: list[Role] = []
     team1.append(Role("r001"))
-    team1.append(Role("r001"))
-    team1.append(Role("r001"))
+    #team1.append(Role("r001"))
+    #team1.append(Role("r001"))
     team2: list[Role] = []
     team2.append(Role("r002"))
 

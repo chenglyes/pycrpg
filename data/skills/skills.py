@@ -39,3 +39,22 @@ class BigFireball(FightSkill):
                 buff = BuffMan.create("b0001", actor)
                 target.add_buff(buff)
                 
+class Snowball(FightSkill):
+    def can_cast(self, actor: FightRole, context: FightContext) -> bool:
+        if not super().can_cast(actor, context):
+            return False
+        self.enemys = [r for r in context.all_roles if r.is_alive() and r.team != actor.team]
+        return len(self.enemys) > 0
+
+    def do_cast(self, actor: FightRole, context: FightContext):
+        for target in self.enemys:
+            damage = actor.calc_damage(0.7 + 0.15 * (self.skill.level - 1))
+            context.deal_damage(actor, target, self, damage)
+            rand = context.random.random()
+            if rand < 0.05:
+                buff = BuffMan.create("b0002", actor)
+                target.add_buff(buff)
+            else:
+                if rand < 0.5:
+                    buff = BuffMan.create("b0003", actor)
+                    target.add_buff(buff)

@@ -2,18 +2,19 @@
     {
         "id": "r001",
         "name": "冰雪莲莲",
-        "base_health": 100,
+        "base_health": 500,
         "base_attack": 100,
         "base_defense": 100,
         "base_speed": 100,
         "skills": [
+            "s001-2",
             "s001-1"
         ]
     },
     {
         "id": "r002",
         "name": "火焰团团",
-        "base_health": 100,
+        "base_health": 500,
         "base_attack": 105,
         "base_defense": 90,
         "base_speed": 105,

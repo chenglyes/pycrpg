@@ -58,6 +58,7 @@ class FightRole:
         buff.on_add(self, self.context)
 
     def remove_buff(self, buff: Buff):
+        buff.on_remove(self, self.context)
         self.context.log_action("remove_buff", {
             "actor": self.uid,
             "buff": buff.template.id

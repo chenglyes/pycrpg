@@ -5,5 +5,19 @@
         "desc": "持续减少生命值。",
         "stacks": 1,
         "entry": "data.buffs.buffs.Burn"
+    },
+    {
+        "id": "b0002",
+        "name": "减速",
+        "desc": "速度降低百分之五十",
+        "stacks": 1,
+        "entry": "data.buffs.buffs.Slowdown"
+    },
+    {
+        "id": "b0003",
+        "name": "冰冻",
+        "desc": "下回合无法行动（可叠加",
+        "stacks": 1,
+        "entry": "data.buffs.buffs.Frozen"
     }
 ]

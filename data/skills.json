@@ -22,5 +22,13 @@
         "cost": 3,
         "cooldown": 0,
         "entry": "data.skills.skills.BigFireball"
+    },
+    {
+        "id": "s001-2",
+        "name": "小雪球",
+        "desc": "发射质地蓬松柔软但温度很低的小雪球，造成 70% 攻击力伤害，有概率让对方降低速度，较低概率附加冰冻效果。",
+        "cost": 2,
+        "cooldown": 0,
+        "entry": "data.skills.skills.Snowball"
     }
 ]
