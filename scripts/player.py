@@ -1,10 +1,13 @@
 from .role import Role
 from .rolecollections import RoleCollections
+from datetime import datetime
 import uuid
 
 class Player:
-    def __init__(self, uid: str | None = None):
-        self.uid = uid if uid else str(uuid.uuid4)
+    def __init__(self, name: str, /, uid: str | None = None, create_time: datetime | None = None):
+        self.name = name
+        self.uid = uid if uid else str(uuid.uuid4())
+        self.create_time = create_time if create_time else datetime.now()
         self.role_collections = RoleCollections()
         
     def add_role(self, role: Role):
@@ -19,12 +22,14 @@ class Player:
     def to_saved(self) -> dict:
         return {
             "uid": self.uid,
-            "roles": [r.to_saved() for r in self.role_collections.roles.values()]
+            "name": self.name,
+            "create_time": self.create_time.isoformat(),
+            "roles": [r.to_saved() for r in self.role_collections.roles]
         }
     
     @classmethod
     def from_saved(cls, data: dict) -> "Player":
-        player = Player(data["uid"])
+        player = Player(data["name"], uid=data["uid"], create_time=datetime.fromisoformat(data["create_time"]))
         roles = data["roles"]
         for r in roles:
             role = Role.from_saved(r)

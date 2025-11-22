@@ -32,3 +32,6 @@ class RoleTemplMan:
     def get(cls, id: str) -> RoleTempl | None:
         return cls._templates.get(id)
     
+    @classmethod
+    def get_all_roles(cls) -> list[str]:
+        return list(cls._templates.keys())
