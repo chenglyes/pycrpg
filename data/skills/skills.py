@@ -17,7 +17,7 @@ class BaseAttack(FightSkill):
         return len(self.enemys) > 0
     
     def do_cast(self, actor: FightRole, context: FightContext):
-        targets = context.random.choices(self.enemys, k=self.target_num)
+        targets = context.random.sample(self.enemys, k=min(len(self.enemys), self.target_num))
         for target in targets:
             damage = actor.calc_damage(self.k, self.base_stat)
             context.deal_damage(actor, target, self, damage)
