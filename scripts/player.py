@@ -23,7 +23,7 @@ class Player:
         return {
             "uid": self.uid,
             "name": self.name,
-            "create_time": self.create_time.isoformat(),
+            "create_time": self.create_time.isoformat(" ", "seconds"),
             "roles": [r.to_saved() for r in self.role_collections.roles]
         }
     

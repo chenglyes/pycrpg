@@ -38,11 +38,12 @@ class SaveMan:
             pass
 
     def update_view(self, player: Player):
-        view = PlayerView(player.uid, player.name, player.create_time.isoformat())
+        view = PlayerView(player.uid, player.name, player.create_time.isoformat(" ", "seconds"))
         has = False
         for v in self.player_views:
             if v.uid == player.uid:
-                v = view
+                v.name = view.name
+                v.create_time = view.create_time
                 has = True
                 break
         if not has:
