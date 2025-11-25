@@ -1,11 +1,12 @@
 from __future__ import annotations
 from typing import TYPE_CHECKING, Callable
+if TYPE_CHECKING:
+    from .fightcontext import FightContext
 from .role import Role
 from .fightskill import FightSkill, FightSkillMan
 from .buff import Buff
 from .eventman import EventMan
-if TYPE_CHECKING:
-    from .fightcontext import FightContext
+from .gameconfig import GameConfig
 
 class FightRole:
     def __init__(self, role: Role, team: int, field: int, context: FightContext):
@@ -113,8 +114,7 @@ class FightRole:
     def take_damage(self, value: int) -> int:
         if value < 0:
             raise ValueError("Damage value must be non-negative.")
-        reduce = 200 / (200 + self.stats.get("defense"))
-        damage = max(1, round(value * reduce))
+        damage = GameConfig.get_role_defense_damage(value, self.stats.get("defense"))
         self.health -= damage
         return damage
     

@@ -8,3 +8,7 @@ class GameConfig:
         growth = 30 * (current_level ** 1.3)
         return round(base + growth)
     
+    @classmethod
+    def get_role_defense_damage(cls, damage: int, defense: int) -> int:
+        reduce = 200 / (200 + defense)
+        return max(1, round(damage * reduce))
