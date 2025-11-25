@@ -7,7 +7,7 @@ from .bufftempl import BuffTempl, BuffTemplMan
 import importlib.util
 
 class Buff:
-    def __init__(self, template: BuffTempl, caster: FightRole, stack: int = 1, duration: int = 1):
+    def __init__(self, template: BuffTempl, caster: FightRole, stack: int, duration: int):
         self.template = template
         self.caster = caster
         self.stack = stack

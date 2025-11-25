@@ -6,7 +6,7 @@
         "stacks": 1,
         "entry": "data.buffs.buffs.DamageBeinTurn",
         "args": {
-            "k": 0.1 
+            "k": 0.1
         }
     },
     {
@@ -16,8 +16,8 @@
         "stacks": 4,
         "entry": "data.buffs.buffs.Statbuff",
         "args": {
-            "k": -0.2 ,
-            "base_stat":"speed"
+            "k": -0.2,
+            "base_stat": "speed"
         }
     },
     {
@@ -25,6 +25,9 @@
         "name": "冰冻",
         "desc": "下回合无法行动（可叠加",
         "stacks": 1,
-        "entry": "data.buffs.buffs.Frozen"
+        "entry": "data.buffs.buffs.StateBuff",
+        "args": {
+            "state": "frozen"
+        }
     }
 ]

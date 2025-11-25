@@ -3,7 +3,7 @@ from scripts.fightcontext import FightContext
 from scripts.fightrole import FightRole
 
 class DamageBeinTurn(Buff):
-    def __init__(self, template: BuffTempl, caster: FightRole, stack: int = 1, duration: int = 1, /,
+    def __init__(self, template: BuffTempl, caster: FightRole, stack: int, duration: int, /,
                  k: float = 1.0, base_stat: str = "attack"):
         super().__init__(template, caster, stack, duration)
         self.k = k
@@ -13,24 +13,20 @@ class DamageBeinTurn(Buff):
         damage = self.caster.calc_damage(self.k, self.base_stat)
         context.deal_damage(self.caster, actor, self, damage)
 
-class Slowdown(Buff):
+class StateBuff(Buff):
+    def __init__(self, template: BuffTempl, caster: FightRole, stack: int, duration: int, /,
+                 state: str):
+        super().__init__(template, caster, stack, duration)
+        self.state = state
+    
     def on_add(self, actor: FightRole, context: FightContext):
-        self.speed = -0.5 * actor.base_stats.get("speed")
-        actor.stats.add("speed",self.speed)
+        actor.add_state(self.state)
+    
     def on_remove(self, actor: FightRole, context: FightContext):
-        actor.stats.add("speed",-self.speed)
-
-class Frozen(Buff):
-    def on_readd(self, buff:Buff, actor: FightRole, context: FightContext):
-        pass
-
-    def on_add(self, actor: FightRole, context: FightContext):
-        actor.add_state("frozen")
-    def on_remove(self, actor: FightRole, context: FightContext):
-        actor.remove_state("frozen")
+        actor.remove_state(self.state)
 
 class Statbuff(Buff):
-    def __init__(self, template: BuffTempl, caster: FightRole, stack: int = 1, duration: int = 1, /,
+    def __init__(self, template: BuffTempl, caster: FightRole, stack: int, duration: int, /,
                  k: float = 1.0, base_stat: str = None):
         super().__init__(template, caster, stack, duration)
         self.k = k
@@ -48,3 +44,4 @@ class Statbuff(Buff):
 
     def on_remove(self, actor: FightRole, context: FightContext):
         actor.stats.add(self.target_stat,-self.stat)
+        
