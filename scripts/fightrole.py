@@ -43,28 +43,25 @@ class FightRole:
         return state in self.states
     
     def add_buff(self, buff: Buff):
-        
-        hasbuff = False
+        has_buff = False
         for b in self.buffs:
-            if b.template.id == buff.template.id:
-                hasbuff = True
-                b.on_readd(buff,self,self.context)
-                self.context.log_action("readd_buff", {
-                "actor": self.uid,
-                "caster": b.caster.uid,
-                "buff": b.template.id,
-                "stack": b.stack,
-                "duration": b.duration,
-                "time": b.time
+            if b.try_stack(buff, self, self.context):
+                has_buff = True
+                self.context.log_action("stack_buff", {
+                    "actor": self.uid,
+                    "caster": buff.caster.uid,
+                    "buff": b.template.id,
+                    "stack": b.stack,
+                    "duration": b.duration
                 })
                 break
-        if not hasbuff:
+        if not has_buff:
             self.context.log_action("add_buff", {
-            "actor": self.uid,
-            "caster": buff.caster.uid,
-            "buff": buff.template.id,
-            "stack": buff.stack,
-            "duration": buff.duration
+                "actor": self.uid,
+                "caster": buff.caster.uid,
+                "buff": buff.template.id,
+                "stack": buff.stack,
+                "duration": buff.duration
             })
             buff.on_add(self, self.context)
             self.buffs.append(buff)
@@ -133,8 +130,8 @@ class FightRole:
 
     def update_buffs(self):
         for buff in self.buffs:
-            buff.time -= 1
-        need_removes = [b for b in self.buffs if b.time <= 0]
+            buff.duration -= 1
+        need_removes = [b for b in self.buffs if b.duration <= 0]
         for buff in need_removes:
             self.remove_buff(buff)
 

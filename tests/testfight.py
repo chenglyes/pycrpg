@@ -65,7 +65,7 @@ def print_fight(fight: Fight, actions: list[dict]):
                 stack = action["stack"]
                 duration = action["duration"]
                 print(f"{get_actor_name(actor_info)} 获得了BUFF {buff_tmpl.name}({stack}层 {duration}回合)，施加者：{get_actor_name(caster_info)}")
-            case "readd_buff":
+            case "stack_buff":
                 actor_info = fight.get_role_info(action["actor"])
                 actor = actor_info["role"]
                 caster_info = fight.get_role_info(action["caster"])
@@ -74,8 +74,7 @@ def print_fight(fight: Fight, actions: list[dict]):
                 assert(buff_tmpl is not None)
                 stack = action["stack"]
                 duration = action["duration"]
-                time = action["time"]
-                print(f"{get_actor_name(actor_info)} BUFF层数增加 {buff_tmpl.name}({stack}层{time}回合)，施加者：{get_actor_name(caster_info)}")
+                print(f"{get_actor_name(actor_info)} 叠加了 BUFF {buff_tmpl.name}({stack}层{duration}回合)，施加者：{get_actor_name(caster_info)}")
             case "remove_buff":
                 info = fight.get_role_info(action["actor"])
                 buff_tmpl = BuffTemplMan.get(action["buff"])

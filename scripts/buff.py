@@ -12,24 +12,22 @@ class Buff:
         self.caster = caster
         self.stack = stack
         self.duration = duration
-        self.time = duration
 
-    def try_stack(self, buff: Buff) -> bool:
+    def try_stack(self, buff: Buff, actor: FightRole, context: FightContext) -> bool:
         if self.template.id != buff.template.id:
             return False
-        self.stack = min(self.stack + buff.stack, self.template.stacks)
+        new_stack = self.stack + buff.stack
+        if self.template.stacks != 0 and new_stack > self.template.stacks:
+            new_stack = self.template.stacks
+        if self.stack != new_stack:
+            self.on_remove(actor, context)
+            self.stack = new_stack
+            self.on_add(actor, context)
         self.duration = max(self.duration, buff.duration)
         return True
 
     def on_add(self, actor: FightRole, context: FightContext):
         pass
-
-    def on_readd(self, buff:Buff, actor: FightRole, context: FightContext):
-        self.stack = min(self.stack + buff.stack, self.template.stacks)
-        self.duration = max(self.duration, buff.duration)
-        self.time += buff.duration
-        self.on_remove(actor,context)
-        self.on_add(actor,context)
 
     def on_remove(self, actor: FightRole, context: FightContext):
         pass
