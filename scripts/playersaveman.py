@@ -16,7 +16,7 @@ class PlayerView:
             "create_time": self.create_time
         }
 
-class SaveMan:
+class PlayerSaveMan:
     def __init__(self):
         self.player_views: list[PlayerView] = []
         self.load()
@@ -37,24 +37,33 @@ class SaveMan:
         except FileNotFoundError:
             pass
 
-    def update_view(self, player: Player):
-        view = PlayerView(player.uid, player.name, player.create_time.isoformat(" ", "seconds"))
-        has = False
+    def add_player(self, player: Player):
         for v in self.player_views:
             if v.uid == player.uid:
-                v.name = view.name
-                v.create_time = view.create_time
-                has = True
+                return
+        self.save_player(player)
+        view = PlayerView(player.uid, player.name, player.create_time.isoformat(" ", "seconds"))
+        self.player_views.append(view)
+        self.save()
+
+    def remove_player(self, uid: str):
+        self.player_views = [v for v in self.player_views if v.uid != uid]
+        self.save()
+        os.remove(f"user/players/{uid}.json")
+
+    def update_player(self, player: Player):
+        for v in self.player_views:
+            if v.uid == player.uid:
+                v.name = player.name
+                v.create_time = player.create_time.isoformat(" ", "seconds")
+                self.save_player(player)
+                self.save()
                 break
-        if not has:
-            self.player_views.append(view)
 
     def save_player(self, player: Player):
         os.makedirs(f"user/players", exist_ok=True)
         with open(f"user/players/{player.uid}.json", "w", encoding="utf-8") as f:
             json.dump(player.to_saved(), f, indent=4)
-            self.update_view(player)
-            self.save()
 
     def load_player(self, uid: str)  -> Player:
         with open(f"user/players/{uid}.json", "r", encoding="utf-8") as f:

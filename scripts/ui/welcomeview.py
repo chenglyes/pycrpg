@@ -1,11 +1,12 @@
 from .uiview import UIView
+from .saveview import SaveView
 import arcade
 import arcade.gui as gui
 
 class WelcomeView(UIView):
     def on_command_start(self, event):
         print("click start")
-        # self.window.show_view(GameView())
+        self.window.show_view(SaveView())
 
     def on_command_option(self, event):
         print("click option")
@@ -14,7 +15,7 @@ class WelcomeView(UIView):
         print("click quit")
         arcade.exit()
 
-    def create_ui(self):
+    def on_init(self):
         anchor = self.manager.add(gui.UIAnchorLayout())
         vbox = anchor.add(
             gui.UIBoxLayout(

@@ -2,8 +2,8 @@ from scripts.roletempl import RoleTemplMan
 from scripts.skilltempl import SkillTemplMan
 from scripts.bufftempl import BuffTemplMan
 from scripts.role import Role
-from scripts.saveman import Player, SaveMan
-from scripts.ui.welcome import WelcomeView
+from scripts.playersaveman import Player, PlayerSaveMan
+from scripts.ui.welcomeview import WelcomeView
 import random
 import arcade
 
@@ -15,10 +15,10 @@ if __name__ == "__main__":
     SkillTemplMan.load("data/skills.json")
     BuffTemplMan.load("data/buffs.json")
 
-    save_man = SaveMan()
+    save_man = PlayerSaveMan()
     if not save_man.player_views:
-        player = Player("Player")
-        save_man.save_player(player)
+        player = Player("Deafult Player")
+        save_man.add_player(player)
 
     for v in save_man.player_views:
         print(v)
@@ -32,4 +32,4 @@ if __name__ == "__main__":
         player.add_role(role)
         print(f"获得角色：{role.template.name}")
 
-    save_man.save_player(player)
+    save_man.update_player(player)

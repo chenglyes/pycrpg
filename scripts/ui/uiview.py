@@ -5,9 +5,9 @@ class UIView(arcade.View):
     def __init__(self):
         super().__init__()
         self.manager = UIManager()
-        self.create_ui()
+        self.on_init()
 
-    def create_ui(self):
+    def on_init(self):
         pass
         
     def on_show_view(self) -> None:
