@@ -19,6 +19,8 @@ class SaveView(UIView):
 
     def on_command_back(self, event):
         print("click back")
+        from .welcomeview import WelcomeView
+        self.window.show_view(WelcomeView())
 
     def on_init(self):
         self.save_man = PlayerSaveMan()

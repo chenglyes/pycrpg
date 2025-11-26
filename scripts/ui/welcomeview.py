@@ -1,11 +1,11 @@
 from .uiview import UIView
-from .saveview import SaveView
 import arcade
 import arcade.gui as gui
 
 class WelcomeView(UIView):
     def on_command_start(self, event):
         print("click start")
+        from .saveview import SaveView
         self.window.show_view(SaveView())
 
     def on_command_option(self, event):
