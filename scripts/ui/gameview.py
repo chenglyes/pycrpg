@@ -12,7 +12,7 @@ class GameView(gui.UIView):
         self.create_ui()
 
     def on_command_role(self, event):
-        pass
+        self.roles_panel.visible = not self.roles_panel.visible
 
     def on_command_bag(self, event):
         pass
@@ -60,6 +60,40 @@ class GameView(gui.UIView):
         self.menu_panel.add(button_bag)
         self.menu_panel.add(button_summon)
         anchor.add(self.menu_panel, anchor_x="right", anchor_y="top", align_x=-20, align_y=-20)
+
+        # role
+        self.roles_grid = gui.UIGridLayout(row_count=4, column_count=3, horizontal_spacing=5, vertical_spacing=5)
+        for i, role in enumerate(self.player.role_collections.roles):
+            if i >= self.roles_grid.row_count * self.roles_grid.column_count:
+                break
+            image = gui.UISpace(color=arcade.color.ALLOY_ORANGE, width=60, height=60)
+            label = gui.UILabel(text=role.template.name, font_size=10)
+            vbox = gui.UIBoxLayout(vertical=True, space_between=2)
+            vbox.with_padding(all=5)
+            vbox.add(image)
+            vbox.add(label)
+            button = gui.UIFlatButton(width=100, height=100)
+            button.add(vbox)
+            self.roles_grid.add(button, row=i // self.roles_grid.column_count, column=i % self.roles_grid.column_count)
+        self.image_role = gui.UISpace(color=arcade.color.ALLOY_ORANGE, width=300, height=400)
+        self.label_role_name = gui.UILabel(text=f"名字最多七个字 Lv.100", font_size=20)
+        self.label_role_health = gui.UILabel(text=f"生  命: {20000}", font_size=16)
+        self.label_role_attack = gui.UILabel(text=f"攻击力: {1000}", font_size=16)
+        self.label_role_defense = gui.UILabel(text=f"防御力: {1000}", font_size=16)
+        vbox = gui.UIBoxLayout(width=300, height=400)
+        #vbox.with_background(color=arcade.color.AERO_BLUE)
+        vbox.add(self.label_role_name)
+        vbox.add(self.label_role_health)
+        vbox.add(self.label_role_attack)
+        vbox.add(self.label_role_defense)
+        self.roles_panel = gui.UIBoxLayout(vertical=False, space_between=15)
+        self.roles_panel.with_padding(all=20)
+        self.roles_panel.with_background(color=arcade.color.AIR_FORCE_BLUE)
+        self.roles_panel.add(self.roles_grid)
+        self.roles_panel.add(self.image_role)
+        self.roles_panel.add(vbox)
+        self.roles_panel.visible = False
+        anchor.add(self.roles_panel, anchor_x="center", anchor_y="center")
 
         # summon
         image1 = gui.UISpace(color=arcade.color.AFRICAN_VIOLET, width=200, height=200)

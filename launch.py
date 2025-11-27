@@ -8,6 +8,6 @@ if __name__ == "__main__":
     SkillTemplMan.load("data/skills.json")
     BuffTemplMan.load("data/buffs.json")
 
-    window = arcade.Window(800, 600, "PYCRPG", center_window=True)
+    window = arcade.Window(1000, 600, "PYCRPG", center_window=True)
     from scripts.ui.welcomeview import WelcomeView
     arcade.run(WelcomeView())
