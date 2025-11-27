@@ -1,4 +1,3 @@
-from typing import override
 import arcade
 import arcade.gui as gui
 

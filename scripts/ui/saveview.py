@@ -1,5 +1,4 @@
 from scripts.playersaveman import Player, PlayerView, PlayerSaveMan
-from typing import override
 import arcade
 import arcade.gui as gui
 

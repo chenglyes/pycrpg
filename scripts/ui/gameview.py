@@ -1,7 +1,6 @@
 from scripts.player import Player
 from scripts.playersaveman import PlayerSaveMan
 from scripts.role import Role, RoleTemplMan
-from typing import override
 import random
 import arcade
 import arcade.gui as gui
