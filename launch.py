@@ -8,12 +8,12 @@ import random
 import arcade
 
 if __name__ == "__main__":
-    window = arcade.Window(800, 600, "PYCRPG", center_window=True)
-    arcade.run(WelcomeView())
-
     RoleTemplMan.load("data/roles.json")
     SkillTemplMan.load("data/skills.json")
     BuffTemplMan.load("data/buffs.json")
+
+    window = arcade.Window(800, 600, "PYCRPG", center_window=True)
+    arcade.run(WelcomeView())
 
     save_man = PlayerSaveMan()
     if not save_man.player_views:

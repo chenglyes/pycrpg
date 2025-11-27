@@ -1,9 +1,12 @@
-from .uiview import UIView
 from typing import override
 import arcade
 import arcade.gui as gui
 
-class WelcomeView(UIView):
+class WelcomeView(gui.UIView):
+    def __init__(self):
+        super().__init__()
+        self.create_ui()
+
     def on_command_start(self, event):
         from .saveview import SaveView
         self.window.show_view(SaveView())
@@ -14,9 +17,8 @@ class WelcomeView(UIView):
     def on_command_quit(self, event):
         arcade.exit()
 
-    @override
-    def on_init(self):
-        anchor = self.manager.add(gui.UIAnchorLayout())
+    def create_ui(self):
+        anchor = self.add_widget(gui.UIAnchorLayout())
         vbox = anchor.add(
             gui.UIBoxLayout(
                 vertical=True, space_between=10
@@ -38,8 +40,3 @@ class WelcomeView(UIView):
             text="退出游戏", width=300, height=80, style=gui.UIFlatButton.STYLE_RED
         ))
         quit_button.on_click = self.on_command_quit
-    
-    @override
-    def on_draw(self):
-        self.clear()
-        super().on_draw()
