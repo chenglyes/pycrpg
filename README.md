@@ -2,6 +2,8 @@
 
 A turn-based card game developed in python.
 
+⚠️ **NOTICE**: This project is currently under active development. Features may be incomplete, and APIs are subject to change.
+
 ## Prerequisites
 
 - Python 3.8 or higher
